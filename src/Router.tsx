@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { MainPage } from "./components/MainPage";
-import { TestPage } from "./components/FoodDetaile";
+import { TestPage } from "./components/FoodDetaile";
 
 export function Router() {
   return (
