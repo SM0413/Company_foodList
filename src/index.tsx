@@ -2,6 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import { createGlobalStyle } from "styled-components";
+import client from "./foodAPI/client";
+import { ApolloProvider } from "@apollo/client";
 
 const GlobalStyle = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
@@ -64,8 +66,8 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
-  <>
+  <ApolloProvider client={client}>
     <GlobalStyle />
     <App />
-  </>
+  </ApolloProvider>
 );

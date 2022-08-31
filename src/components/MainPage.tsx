@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
+import { gql, useApolloClient } from "@apollo/client";
+import { useEffect, useState } from "react";
 
 const FirstDIV = styled.div`
   background-color: white;
@@ -19,15 +21,14 @@ const Title = styled.h1`
 `;
 
 const CalendarDIV = styled.div`
-  display: block;
-  display: flexbox;
+  display: flex;
   justify-content: center;
   align-items: center;
 `;
 
 const EachCalendarUL = styled.ul`
   display: grid;
-  margin: 5px;
+  margin: 10px;
   border-radius: 10px;
   min-width: 13%;
   min-height: 150px;
@@ -37,30 +38,49 @@ const EachCalendarUL = styled.ul`
 
 const EachCalendarLI = styled.li`
   display: block;
+  margin: 0 10px;
+  margin-top: 3px;
 `;
-// interface Iapi {
-//   id: number;
-//   mainFood: String;
-//   sideFood1: String;
-//   sideFood2: String;
-//   sideFood3: String;
-//   soup: String;
-//   salad: String;
-//   drink: String;
-// }
-
-const foodAPI = {
-  id: Date.now(),
-  mainFood: "제육볶음",
-  sideFood1: "김치",
-  sideFood2: "오이",
-  sideFood3: "젓갈",
-  soup: "미역국",
-  salad: "기본샐러드",
-  drink: "누룽지",
-};
+interface Iapi {
+  id: string;
+  mainFood: string;
+  sideFood1: string;
+  sideFood2: string;
+  sideFood3: string;
+  soup: string;
+  drink: string;
+  salad: string;
+  time: string;
+  type: string;
+  rice: string;
+}
 
 export function MainPage() {
+  const [foods, setFoods] = useState<Iapi[]>([]);
+  const client = useApolloClient();
+  useEffect(() => {
+    client
+      .query({
+        query: gql`
+          {
+            allFoods {
+              id
+              mainFood
+              sideFood1
+              sideFood2
+              sideFood3
+              soup
+              drink
+              salad
+              time
+              type
+              rice
+            }
+          }
+        `,
+      })
+      .then((result) => setFoods(result.data.allFoods));
+  });
   return (
     <FirstDIV>
       <Helmet>
@@ -70,18 +90,23 @@ export function MainPage() {
         <Title>08월</Title>
       </TitleDIV>
       <CalendarDIV>
-        <Link to={foodAPI.mainFood} state={{ foodDate: foodAPI.id }}>
-          <EachCalendarUL>
-            <EachCalendarLI as="span"> 1 </EachCalendarLI>
-            <EachCalendarLI>{foodAPI.mainFood}</EachCalendarLI>
-            <EachCalendarLI>{foodAPI.sideFood1}</EachCalendarLI>
-            <EachCalendarLI>{foodAPI.sideFood2}</EachCalendarLI>
-            <EachCalendarLI>{foodAPI.sideFood3}</EachCalendarLI>
-            <EachCalendarLI>{foodAPI.soup}</EachCalendarLI>
-            <EachCalendarLI>{foodAPI.salad}</EachCalendarLI>
-            <EachCalendarLI>{foodAPI.drink}</EachCalendarLI>
-          </EachCalendarUL>
-        </Link>
+        {foods.map((food) => (
+          <Link to={food.id} state={{ foodDate: food.time }}>
+            <EachCalendarUL>
+              <EachCalendarLI key={food.id}>{food.id}</EachCalendarLI>
+              <EachCalendarLI key={food.id}>{food.type}</EachCalendarLI>
+              <EachCalendarLI key={food.id}>{food.time}</EachCalendarLI>
+              <EachCalendarLI key={food.id}>{food.mainFood}</EachCalendarLI>
+              <EachCalendarLI key={food.id}>{food.sideFood1}</EachCalendarLI>
+              <EachCalendarLI key={food.id}>{food.sideFood2}</EachCalendarLI>
+              <EachCalendarLI key={food.id}>{food.sideFood3}</EachCalendarLI>
+              <EachCalendarLI key={food.id}>{food.rice}</EachCalendarLI>
+              <EachCalendarLI key={food.id}>{food.soup}</EachCalendarLI>
+              <EachCalendarLI key={food.id}>{food.drink}</EachCalendarLI>
+              <EachCalendarLI key={food.id}>{food.salad}</EachCalendarLI>
+            </EachCalendarUL>
+          </Link>
+        ))}
       </CalendarDIV>{" "}
     </FirstDIV>
   );
