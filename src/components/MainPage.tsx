@@ -68,17 +68,6 @@ const Dinner = styled.span`
 
 interface Iapi {
   id: string;
-  date: string;
-  mainFood: string;
-  sideFood1: string;
-  sideFood2: string;
-  sideFood3: string;
-  soup: string;
-  drink: string;
-  salad: string;
-  time: string;
-  type: string;
-  rice: string;
 }
 
 export function MainPage() {
@@ -92,17 +81,6 @@ export function MainPage() {
           {
             allFoods {
               id
-              date
-              mainFood
-              sideFood1
-              sideFood2
-              sideFood3
-              soup
-              drink
-              salad
-              time
-              type
-              rice
             }
           }
         `,
@@ -124,11 +102,13 @@ export function MainPage() {
         </LoadingH1>
       ) : null}
       <DayDIV>
-        <MealTimeDIV>
-          <Breakfast>아침</Breakfast>
-          <Lunch>점심</Lunch>
-          <Dinner>저녁</Dinner>
-        </MealTimeDIV>
+        {foods.length === 0 ? null : (
+          <MealTimeDIV>
+            <Breakfast>아침</Breakfast>
+            <Lunch>점심</Lunch>
+            <Dinner>저녁</Dinner>
+          </MealTimeDIV>
+        )}
         <Monday />
         <Tuesday />
         <Wednesday />

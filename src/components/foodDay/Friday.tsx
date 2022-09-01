@@ -25,7 +25,7 @@ const EachCalendarUL = styled.ul`
   border-radius: 10px;
   min-width: 100px;
   min-height: 200px;
-  max-width: 250px;
+  max-width: 200px;
   max-height: 300px;
   place-items: center;
   border: 1px solid black;
@@ -33,7 +33,15 @@ const EachCalendarUL = styled.ul`
     color: #eab543;
   }
 `;
+const WaringDIV = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
+const WaringSpan = styled.span`
+  color: red;
+`;
 const EachCalendarLI = styled.li`
   display: block;
   margin: 0 10px;
@@ -52,6 +60,8 @@ interface Iapi {
   time: string;
   type: string;
   rice: string;
+  waring: boolean;
+  isTwo: boolean;
 }
 
 export function Friday() {
@@ -75,6 +85,9 @@ export function Friday() {
               time
               type
               rice
+              waring
+
+              isTwo
             }
           }
         `,
@@ -91,9 +104,20 @@ export function Friday() {
       {foods.length === 0
         ? null
         : foods.map((food, index) =>
-            food.date === "금" ? (
-              <Link key={index} to={food.id} state={{ foodTime: food.time }}>
+            food.date === "금" ||
+            (food.date === "금아" && food.isTwo !== false) ||
+            (food.date === "금점" && food.isTwo === true) ? (
+              <Link key={index} to={food.date} state={{ foodTime: food.time }}>
                 <EachCalendarUL>
+                  <WaringDIV>
+                    <EachCalendarLI key={"을지로"}>
+                      <WaringSpan>
+                        {food.waring === true || food.isTwo === true
+                          ? "여기를 클릭해서 메뉴를 확인 해 주세요"
+                          : null}
+                      </WaringSpan>
+                    </EachCalendarLI>
+                  </WaringDIV>
                   <EachCalendarLI key={food.type}>
                     {food.date === "금" ? food.type : null}
                   </EachCalendarLI>

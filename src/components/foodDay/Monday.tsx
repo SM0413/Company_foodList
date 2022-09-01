@@ -25,7 +25,7 @@ const EachCalendarUL = styled.ul`
   border-radius: 10px;
   min-width: 100px;
   min-height: 200px;
-  max-width: 250px;
+  max-width: 200px;
   max-height: 300px;
   place-items: center;
   border: 1px solid black;
@@ -34,6 +34,15 @@ const EachCalendarUL = styled.ul`
   }
 `;
 
+const WaringDIV = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const WaringSpan = styled.span`
+  color: red;
+`;
 const EachCalendarLI = styled.li`
   display: block;
   margin: 0 10px;
@@ -52,6 +61,8 @@ interface Iapi {
   time: string;
   type: string;
   rice: string;
+  waring: boolean;
+  isTwo: boolean;
 }
 
 export function Monday() {
@@ -75,6 +86,8 @@ export function Monday() {
               time
               type
               rice
+              waring
+              isTwo
             }
           }
         `,
@@ -91,9 +104,20 @@ export function Monday() {
       {foods.length === 0
         ? null
         : foods.map((food, index) =>
-            food.date === "월" ? (
-              <Link key={index} to={food.id} state={{ foodTime: food.time }}>
+            food.date === "월" ||
+            (food.date === "월아" && food.isTwo !== false) ||
+            (food.date === "월점" && food.isTwo === true) ? (
+              <Link key={index} to={food.date} state={{ foodDate: food.date }}>
                 <EachCalendarUL>
+                  <WaringDIV>
+                    <EachCalendarLI key={"을지로"}>
+                      <WaringSpan>
+                        {food.waring === true || food.isTwo === true
+                          ? "2022 을지연습 관계로 웰빙식과 한식은 운영하지 않습니다."
+                          : null}
+                      </WaringSpan>
+                    </EachCalendarLI>
+                  </WaringDIV>
                   <EachCalendarLI key={food.type}>
                     {food.date === "월" ? food.type : null}
                   </EachCalendarLI>
