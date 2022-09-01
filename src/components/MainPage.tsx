@@ -1,8 +1,12 @@
 import styled from "styled-components";
 import { Helmet } from "react-helmet";
-import { Link } from "react-router-dom";
 import { gql, useApolloClient } from "@apollo/client";
 import { useEffect, useState } from "react";
+import { Tuesday } from "./foodDay/Tuesday";
+import { Monday } from "./foodDay/Monday";
+import { Wednesday } from "./foodDay/Wednesday";
+import { Friday } from "./foodDay/Friday";
+import { Thursday } from "./foodDay/Thursday";
 
 const FirstDIV = styled.div`
   background-color: white;
@@ -20,29 +24,51 @@ const Title = styled.h1`
   margin-top: 1vh;
 `;
 
-const CalendarDIV = styled.div`
+const WhatWeek = styled.span`
   display: flex;
   justify-content: center;
-  align-items: center;
+  color: #cad3c8;
 `;
 
-const EachCalendarUL = styled.ul`
+const LoadingH1 = styled.h3`
+  color: #d35400;
+  font-weight: bold;
   display: grid;
-  margin: 10px;
-  border-radius: 10px;
-  min-width: 13%;
-  min-height: 150px;
   place-items: center;
-  border: 1px solid black;
 `;
 
-const EachCalendarLI = styled.li`
-  display: block;
-  margin: 0 10px;
-  margin-top: 3px;
+const DayDIV = styled.div`
+  display: flex;
+  margin: 10px 20px;
+  justify-content: center;
 `;
+
+const MealTimeDIV = styled.div`
+  display: block;
+  justify-content: center;
+  align-items: center;
+  margin-right: 30px;
+`;
+
+const Breakfast = styled.span`
+  margin-top: 130px;
+  font-size: 30px;
+  display: block;
+`;
+const Lunch = styled.span`
+  margin-top: 180px;
+  font-size: 30px;
+  display: block;
+`;
+const Dinner = styled.span`
+  margin-top: 180px;
+  font-size: 30px;
+  display: block;
+`;
+
 interface Iapi {
   id: string;
+  date: string;
   mainFood: string;
   sideFood1: string;
   sideFood2: string;
@@ -56,6 +82,7 @@ interface Iapi {
 }
 
 export function MainPage() {
+  const date = new Date(Date.now());
   const [foods, setFoods] = useState<Iapi[]>([]);
   const client = useApolloClient();
   useEffect(() => {
@@ -65,6 +92,7 @@ export function MainPage() {
           {
             allFoods {
               id
+              date
               mainFood
               sideFood1
               sideFood2
@@ -87,27 +115,26 @@ export function MainPage() {
         <title>FoodList</title>
       </Helmet>
       <TitleDIV>
-        <Title>08월</Title>
+        <Title>{date.getMonth() + 1}월</Title>
       </TitleDIV>
-      <CalendarDIV>
-        {foods.map((food) => (
-          <Link to={food.id} state={{ foodDate: food.time }}>
-            <EachCalendarUL>
-              <EachCalendarLI key={food.id}>{food.id}</EachCalendarLI>
-              <EachCalendarLI key={food.id}>{food.type}</EachCalendarLI>
-              <EachCalendarLI key={food.id}>{food.time}</EachCalendarLI>
-              <EachCalendarLI key={food.id}>{food.mainFood}</EachCalendarLI>
-              <EachCalendarLI key={food.id}>{food.sideFood1}</EachCalendarLI>
-              <EachCalendarLI key={food.id}>{food.sideFood2}</EachCalendarLI>
-              <EachCalendarLI key={food.id}>{food.sideFood3}</EachCalendarLI>
-              <EachCalendarLI key={food.id}>{food.rice}</EachCalendarLI>
-              <EachCalendarLI key={food.id}>{food.soup}</EachCalendarLI>
-              <EachCalendarLI key={food.id}>{food.drink}</EachCalendarLI>
-              <EachCalendarLI key={food.id}>{food.salad}</EachCalendarLI>
-            </EachCalendarUL>
-          </Link>
-        ))}
-      </CalendarDIV>{" "}
+      <WhatWeek>8월 9일 ~ 9월 2일</WhatWeek>
+      {foods.length === 0 ? (
+        <LoadingH1>
+          API서버가 오프라인 입니다(가동시간 : 09:00 ~ 18:00)
+        </LoadingH1>
+      ) : null}
+      <DayDIV>
+        <MealTimeDIV>
+          <Breakfast>아침</Breakfast>
+          <Lunch>점심</Lunch>
+          <Dinner>저녁</Dinner>
+        </MealTimeDIV>
+        <Monday />
+        <Tuesday />
+        <Wednesday />
+        <Thursday />
+        <Friday />
+      </DayDIV>
     </FirstDIV>
   );
 }
